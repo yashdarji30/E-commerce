@@ -1,8 +1,8 @@
 import { create } from "zustand";
 import toast from "react-hot-toast";
-import axios from "../lib/axios.js";
+import axios from "../lib/axios";
 
-export const  useProductStore = create(set => ({
+export const useProductStore = create(set => ({
   products: [],
   loading: false,
 
@@ -27,7 +27,7 @@ export const  useProductStore = create(set => ({
       set({ products: response.data.products, loading: false });
     } catch (error) {
       set({ error: "Failed to fetch products", loading: false });
-      toast.error(error.response.data.error || "Failed to Fetch products");
+      toast.error(error.response.data.error || "Failed to fetch products");
     }
   },
   fetchProductsByCategory: async category => {
@@ -52,14 +52,14 @@ export const  useProductStore = create(set => ({
       }));
     } catch (error) {
       set({ loading: false });
-      toast.error(error.response.data.error || "Failed to delete Product");
+      toast.error(error.response.data.error || "Failed to delete product");
     }
   },
   toggleFeaturedProduct: async productId => {
     set({ loading: true });
     try {
       const response = await axios.patch(`/products/${productId}`);
-      //this will update the isFeatured prop of the product
+      // this will update the isFeatured prop of the product
       set(prevProducts => ({
         products: prevProducts.products.map(product =>
           product._id === productId
@@ -73,7 +73,6 @@ export const  useProductStore = create(set => ({
       toast.error(error.response.data.error || "Failed to update product");
     }
   },
-
   fetchFeaturedProducts: async () => {
     set({ loading: true });
     try {

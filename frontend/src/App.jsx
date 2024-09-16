@@ -9,10 +9,14 @@ import CategoryPage from './pages/CategoryPage';
 import { useUserStore } from './stores/useUserStore';
 import { useCartStore } from './stores/useCartStore';
 import LoadingSpinner from './components/LoadingSipnner';
+import CartPage from './pages/CartPage';
+import PurchaseSuccessPage from './pages/PurchaseSuccessPage';
+import PurchaseCancelPage from "./pages/PurchaseCancelPage";
+import AdminPage from "./pages/AdminPage";
 
 function App() {
   const { user, checkAuth, checkingAuth } = useUserStore();
-	const { getCartItems } = useCartStore();
+	const { getcartItems } = useCartStore();
 	useEffect(() => {
 		checkAuth();
 	}, [checkAuth]);
@@ -21,8 +25,8 @@ function App() {
 	useEffect(() => {
 		if (!user) return;
 
-		getCartItems();
-	}, [getCartItems, user]);
+		getcartItems();
+	}, [getcartItems, user]);
 
 	if (checkingAuth) return <LoadingSpinner />;
 
@@ -41,9 +45,11 @@ function App() {
         <Route path="/signup" element={!user ? <SignUpPage /> : <Navigate to = '/' />} />
         <Route path="/login" element={!user ? <LoginPage /> : <Navigate to= "/" />} />
         <Route path="/secret-dashboard" element={user?.role === "admin" ? <AdminPage /> : <Navigate to='/login' />} />
+        <Route path='/cart' element={user ? <CartPage /> : <Navigate to='/login' />} />
         <Route path="/category/:category" element={<CategoryPage />} />
         <Route path='/cart' element={user ? <CartPage /> : <Navigate to='/login' />} />
         <Route path='/purchase-success' element={user ? <PurchaseSuccessPage /> : <Navigate to='/login'/>} />
+        <Route path='/purchase-cancel' element={user ? <PurchaseCancelPage /> : <Navigate to='/login' />} />
 
       </Routes>
     </div>

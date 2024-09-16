@@ -1,6 +1,7 @@
 import { redis } from "../lib/redis.js";
 import cloudinary from "../lib/cloudinary.js";
 import Product from "../models/prodcut.model.js";
+
 export const getAllProducts = async (req, res) => {
   try {
     const products = await Product.find({}); // find all products
@@ -66,6 +67,7 @@ export const createProduct = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
 export const deleteProduct = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
@@ -76,18 +78,17 @@ export const deleteProduct = async (req, res) => {
 
     if (product.image) {
       const publicId = product.image.split("/").pop().split(".")[0];
-
       try {
         await cloudinary.uploader.destroy(`products/${publicId}`);
-        console.log("deleted image from cloudinary");
+        console.log("deleted image from cloduinary");
       } catch (error) {
-        console.log("error deleting image from cloudinary", error);
+        console.log("error deleting image from cloduinary", error);
       }
     }
 
     await Product.findByIdAndDelete(req.params.id);
 
-    res.json({ message: "Product deleted Successfully" });
+    res.json({ message: "Product deleted successfully" });
   } catch (error) {
     console.log("Error in deleteProduct controller", error.message);
     res.status(500).json({ message: "Server error", error: error.message });
@@ -119,6 +120,7 @@ export const getRecommendedProducts = async (req, res) => {
 };
 
 export const getProductsByCategory = async (req, res) => {
+  const { category } = req.params;
   try {
     const products = await Product.find({ category });
     res.json({ products });
